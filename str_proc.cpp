@@ -167,7 +167,7 @@ void split_into_parts(
                 std::cout << "AA " << std::endl;
 
                 res.push_back( src.substr( start, prev_space_pos - start ) );
-                start           += prev_space_pos + 1;
+                start           = prev_space_pos + 1;
                 prev_space_pos  = space_pos;
             }
             else
@@ -178,15 +178,20 @@ void split_into_parts(
                 {
                     std::cout << "ABA " << std::endl;
 
-                    std::string::size_type iter = part_len / max_length;
+                    res.push_back( src.substr( start, prev_space_pos - start ) );
+                    start   = prev_space_pos + 1;
 
-                    for( std::string::size_type i = 0; i < iter; ++i )
+                    // recalculate part len
+                    part_len = space_pos - start;
+
+                    if( part_len > max_length )
                     {
-                        res.push_back( src.substr( start, max_length ) );
-                        start   += max_length;
+                        prev_space_pos  = std::string::npos;
                     }
-
-                    prev_space_pos  = std::string::npos;
+                    else
+                    {
+                        prev_space_pos  = space_pos;
+                    }
                 }
                 else
                 {
