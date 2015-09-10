@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 2543 $ $Date:: 2015-09-09 #$ $Author: serge $
+// $Revision: 2548 $ $Date:: 2015-09-10 #$ $Author: serge $
 
 
 #include "str_proc.h"               // self
@@ -131,5 +131,59 @@ void split_into_sentences( std::vector<std::string> & res, const std::string & s
         ::remove_extra_spaces( s );
     }
 }
+
+void split_into_parts(
+        std::vector<std::string>        & res,
+        const std::string               & src,
+        unsigned int                    max_lenghth )
+{
+    std::string::size_type len = src.size();
+
+    if( len < max_lenghth )
+    {
+        res.push_back( src );
+        return;
+    }
+
+    std::string::size_type i = 0;
+
+    std::string::size_type prev_space_pos = std::string::npos;
+
+    while( i < len )
+    {
+        std::string::size_type space_pos = src.find_first_of(' ', i );
+
+        if( space_pos == std::string::npos )
+        {
+            if( prev_space_pos == std::string::npos )
+            {
+                // no spaces found, need to cut in the middle of the string
+                res.push_back( src.substr( i, max_lenghth ));
+                i += max_lenghth;
+            }
+            else
+            {
+
+            }
+        }
+        else
+        {
+
+        }
+    }
+}
+
+void split_into_parts(
+        std::vector<std::string>        & res,
+        const std::vector<std::string>  & src,
+        unsigned int                    max_lenghth )
+{
+    for( auto & s : src )
+    {
+        split_into_parts( res, s, max_lenghth );
+    }
+
+}
+
 
 NAMESPACE_TTSCACHE_END
