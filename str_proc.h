@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 2548 $ $Date:: 2015-09-10 #$ $Author: serge $
+// $Revision: 2549 $ $Date:: 2015-09-10 #$ $Author: serge $
 
 #ifndef STR_PROC_H
 #define STR_PROC_H
@@ -38,7 +38,7 @@ void split_into_sentences( std::vector<std::string> & res, const std::string & s
 void split_into_parts(
         std::vector<std::string>        & res,
         const std::vector<std::string>  & src,
-        unsigned int                    max_lenghth );
+        unsigned int                    max_length );
 
 void remove_special_symbols( std::string & s );
 

@@ -19,13 +19,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 2548 $ $Date:: 2015-09-10 #$ $Author: serge $
+// $Revision: 2554 $ $Date:: 2015-09-11 #$ $Author: serge $
 
 
 #include "str_proc.h"               // self
 
 #include <set>                      // std::set
 #include <boost/algorithm/string/replace.hpp>   // replace_all
+#include <iostream>                 // DEBUG: cout
 
 #include "../utils/trim.h"                  // trim
 #include "../utils/remove_extra_spaces.h"   // remove_extra_spaces
@@ -135,52 +136,119 @@ void split_into_sentences( std::vector<std::string> & res, const std::string & s
 void split_into_parts(
         std::vector<std::string>        & res,
         const std::string               & src,
-        unsigned int                    max_lenghth )
+        unsigned int                    max_length )
 {
     std::string::size_type len = src.size();
 
-    if( len < max_lenghth )
+    if( len < max_length )
     {
         res.push_back( src );
         return;
     }
 
-    std::string::size_type i = 0;
+    std::string::size_type start = 0;
 
-    std::string::size_type prev_space_pos = std::string::npos;
+    auto prev_space_pos   = std::string::npos;
 
-    while( i < len )
+    while( start < len )
     {
-        std::string::size_type space_pos = src.find_first_of(' ', i );
-
-        if( space_pos == std::string::npos )
+        if( prev_space_pos != std::string::npos )
         {
-            if( prev_space_pos == std::string::npos )
+            std::string::size_type space_pos = src.find_first_of(' ', prev_space_pos + 1 );
+
+            std::cout << "A " << std::endl;
+
+            std::cout << "space_pos " << space_pos << std::endl;
+            std::cout << "prev_space_pos " << prev_space_pos << std::endl;
+            std::cout << "start " << start << std::endl;
+
+            if( space_pos == std::string::npos )
             {
-                // no spaces found, need to cut in the middle of the string
-                res.push_back( src.substr( i, max_lenghth ));
-                i += max_lenghth;
+                std::cout << "AA " << std::endl;
+
+                res.push_back( src.substr( start, prev_space_pos - start ) );
+                start           += prev_space_pos + 1;
+                prev_space_pos  = space_pos;
             }
             else
             {
+                auto part_len = space_pos - start;
 
+                if( part_len > max_length )
+                {
+                    std::cout << "ABA " << std::endl;
+
+                    std::string::size_type iter = part_len / max_length;
+
+                    for( std::string::size_type i = 0; i < iter; ++i )
+                    {
+                        res.push_back( src.substr( start, max_length ) );
+                        start   += max_length;
+                    }
+
+                    prev_space_pos  = std::string::npos;
+                }
+                else
+                {
+                    std::cout << "ABB " << std::endl;
+                    prev_space_pos  = space_pos;
+                }
             }
         }
         else
         {
+            std::string::size_type space_pos = src.find_first_of(' ', start );
 
+            std::cout << "B " << std::endl;
+            std::cout << "space_pos " << space_pos << std::endl;
+            std::cout << "prev_space_pos " << prev_space_pos << std::endl;
+            std::cout << "start " << start << std::endl;
+
+            if( space_pos == std::string::npos )
+            {
+                std::cout << "BA " << std::endl;
+
+                // no spaces found, need to cut in the middle of the string
+                res.push_back( src.substr( start, max_length ) );
+                start   += max_length;
+            }
+            else
+            {
+                auto part_len = space_pos - start;
+
+                if( part_len > max_length )
+                {
+                    std::cout << "BBA " << std::endl;
+
+                    std::string::size_type iter = part_len / max_length;
+
+                    for( std::string::size_type i = 0; i < iter; ++i )
+                    {
+                        res.push_back( src.substr( start, max_length ) );
+                        start   += max_length;
+                    }
+                }
+                else
+                {
+                    std::cout << "BBB " << std::endl;
+
+                    prev_space_pos  = space_pos;
+                }
+            }
         }
+
+
     }
 }
 
 void split_into_parts(
         std::vector<std::string>        & res,
         const std::vector<std::string>  & src,
-        unsigned int                    max_lenghth )
+        unsigned int                    max_length )
 {
     for( auto & s : src )
     {
-        split_into_parts( res, s, max_lenghth );
+        split_into_parts( res, s, max_length );
     }
 
 }

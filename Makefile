@@ -110,8 +110,9 @@ $(TARGET): $(BINDIR) $(BINDIR)/$(TARGET)
 	ln -sf $(BINDIR)/$(TARGET) $(TARGET)
 	@echo "$@ uptodate - ${MODE}"
 
-$(BINDIR)/$(TARGET): $(LIBS) $(OBJDIR)/$(TARGET).o $(OBJS) $(BINDIR)/$(STATICLIB)
+$(BINDIR)/$(TARGET): $(LIBS) $(OBJDIR)/$(TARGET).o $(OBJDIR)/test_split_into_parts.o $(OBJS) $(BINDIR)/$(STATICLIB)
 	$(CC) $(CFLAGS) -o $@ $(OBJDIR)/$(TARGET).o $(BINDIR)/$(LIBNAME).a $(LIBS) $(EXT_LIBS) $(LFLAGS_TEST)
+	$(CC) $(CFLAGS) -o test_split_into_parts $(OBJDIR)/test_split_into_parts.o $(OBJDIR)/str_proc.o $(LIBS) $(EXT_LIBS) $(LFLAGS_TEST)
 
 $(BINDIR)/lib%.a: %		# somehow this rule doesn't work
 	cd ../$<; make; cd $(project)
