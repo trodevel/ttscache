@@ -19,13 +19,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 2554 $ $Date:: 2015-09-11 #$ $Author: serge $
+// $Revision: 2562 $ $Date:: 2015-09-12 #$ $Author: serge $
 
 
 #include "str_proc.h"               // self
 
 #include <set>                      // std::set
-#include <boost/algorithm/string/replace.hpp>   // replace_all
+#include <algorithm>                // std::replace_if
 #include <iostream>                 // DEBUG: cout
 
 #include "../utils/trim.h"                  // trim
@@ -118,7 +118,9 @@ void split( std::vector<std::string> & res, const std::string & str )
 
 void remove_special_symbols( std::string & s )
 {
-    boost::replace_all( s, "~@#$%^&*()__+`-=[]{}\\:|<>/", " " );
+//    boost::replace_all( s, "~@#$%^&*()__+`-=[]{}\\:|<>/", " " );
+    std::replace_if( s.begin(), s.end(),
+                [] (const char& c) { return std::ispunct(c); }, ' ' );
 }
 
 void split_into_sentences( std::vector<std::string> & res, const std::string & str )
@@ -156,15 +158,17 @@ void split_into_parts(
         {
             std::string::size_type space_pos = src.find_first_of(' ', prev_space_pos + 1 );
 
-            std::cout << "A " << std::endl;
+//            std::cout << "A " << std::endl;
+#ifdef XXX
 
             std::cout << "space_pos " << space_pos << std::endl;
             std::cout << "prev_space_pos " << prev_space_pos << std::endl;
             std::cout << "start " << start << std::endl;
+#endif  // XXX
 
             if( space_pos == std::string::npos )
             {
-                std::cout << "AA " << std::endl;
+//                std::cout << "AA " << std::endl;
 
                 res.push_back( src.substr( start, prev_space_pos - start ) );
                 start           = prev_space_pos + 1;
@@ -176,7 +180,7 @@ void split_into_parts(
 
                 if( part_len > max_length )
                 {
-                    std::cout << "ABA " << std::endl;
+//                    std::cout << "ABA " << std::endl;
 
                     res.push_back( src.substr( start, prev_space_pos - start ) );
                     start   = prev_space_pos + 1;
@@ -195,7 +199,7 @@ void split_into_parts(
                 }
                 else
                 {
-                    std::cout << "ABB " << std::endl;
+//                    std::cout << "ABB " << std::endl;
                     prev_space_pos  = space_pos;
                 }
             }
@@ -204,14 +208,16 @@ void split_into_parts(
         {
             std::string::size_type space_pos = src.find_first_of(' ', start );
 
-            std::cout << "B " << std::endl;
+//            std::cout << "B " << std::endl;
+#ifdef XXX
             std::cout << "space_pos " << space_pos << std::endl;
             std::cout << "prev_space_pos " << prev_space_pos << std::endl;
             std::cout << "start " << start << std::endl;
+#endif // XXX
 
             if( space_pos == std::string::npos )
             {
-                std::cout << "BA " << std::endl;
+//                std::cout << "BA " << std::endl;
 
                 // no spaces found, need to cut in the middle of the string
                 res.push_back( src.substr( start, max_length ) );
@@ -223,7 +229,7 @@ void split_into_parts(
 
                 if( part_len > max_length )
                 {
-                    std::cout << "BBA " << std::endl;
+//                    std::cout << "BBA " << std::endl;
 
                     std::string::size_type iter = part_len / max_length;
 
@@ -235,7 +241,7 @@ void split_into_parts(
                 }
                 else
                 {
-                    std::cout << "BBB " << std::endl;
+//                    std::cout << "BBB " << std::endl;
 
                     prev_space_pos  = space_pos;
                 }
@@ -258,5 +264,23 @@ void split_into_parts(
 
 }
 
+void remove_empty_parts(
+        std::vector<std::string>        & res,
+        const std::vector<std::string>  & src )
+{
+    for( auto & s : src )
+    {
+        std::string s2 = s;
+        trim( s2 );
+        if( s2.empty() == false )
+        {
+            res.push_back( s2 );
+        }
+        else
+        {
+            std::cout << "empty token" << std::endl;
+        }
+    }
+}
 
 NAMESPACE_TTSCACHE_END

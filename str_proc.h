@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 2549 $ $Date:: 2015-09-10 #$ $Author: serge $
+// $Revision: 2560 $ $Date:: 2015-09-11 #$ $Author: serge $
 
 #ifndef STR_PROC_H
 #define STR_PROC_H
@@ -43,6 +43,10 @@ void split_into_parts(
 void remove_special_symbols( std::string & s );
 
 void remove_extra_spaces( std::string & s );
+
+void remove_empty_parts(
+        std::vector<std::string>        & res,
+        const std::vector<std::string>  & src );
 
 NAMESPACE_TTSCACHE_END
 

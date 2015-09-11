@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 2545 $ $Date:: 2015-09-09 #$ $Author: serge $
+// $Revision: 2561 $ $Date:: 2015-09-11 #$ $Author: serge $
 
 
 #include "ttscache.h"               // self
@@ -161,9 +161,17 @@ bool TtsCache::say( const std::string & text, const std::string & filename, lang
         return false;
     }
 
+    std::vector< std::string > sentences;
+
+    split_into_sentences( sentences, text );
+
+    std::vector< std::string > words_raw;
+
+    split_into_parts( words_raw, sentences, config_.max_length );
+
     std::vector< std::string > words;
 
-    split_into_sentences( words, text );
+    remove_empty_parts( words, words_raw );
 
     if( words.empty() )
         return true;
