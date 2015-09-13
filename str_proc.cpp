@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 2562 $ $Date:: 2015-09-12 #$ $Author: serge $
+// $Revision: 2563 $ $Date:: 2015-09-13 #$ $Author: serge $
 
 
 #include "str_proc.h"               // self
@@ -278,7 +278,7 @@ void remove_empty_parts(
         }
         else
         {
-            std::cout << "empty token" << std::endl;
+            //std::cout << "empty token" << std::endl;
         }
     }
 }
