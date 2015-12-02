@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 2561 $ $Date:: 2015-09-11 #$ $Author: serge $
+// $Revision: 2880 $ $Date:: 2015-12-02 #$ $Author: serge $
 
 
 #include "ttscache.h"               // self
@@ -92,7 +92,7 @@ TtsCache::~TtsCache()
 {
 }
 
-bool TtsCache::init( const Config & config, gspeak::ITextToSpeech * gtts )
+bool TtsCache::init( const Config & config, tts_connect::ITextToSpeech * gtts )
 {
     MUTEX_SCOPE_LOCK( mutex_ );
 

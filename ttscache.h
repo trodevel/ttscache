@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 2545 $ $Date:: 2015-09-09 #$ $Author: serge $
+// $Revision: 2880 $ $Date:: 2015-12-02 #$ $Author: serge $
 
 #ifndef TTSCACHE_H
 #define TTSCACHE_H
@@ -31,7 +31,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <vector>                   // std::vector
 #include <stdint.h>                 // uint32_t
 
-#include "../gspeak/i_text_to_speech.h"     // ITextToSpeech
+#include "../tts_connect/i_text_to_speech.h"    // ITextToSpeech
 #include "../lang_tools/language_enum.h"    // lang_e
 
 #include "namespace_lib.h"  // NAMESPACE_TTSCACHE_START
@@ -101,7 +101,7 @@ public:
 
     ~TtsCache();
 
-    bool init( const Config & config, gspeak::ITextToSpeech * gtts );
+    bool init( const Config & config, tts_connect::ITextToSpeech * gtts );
     bool save_state();
 
     // interface of ITextToSpeech
@@ -157,7 +157,7 @@ private:
     MapWordLocaleToInt          word_to_id_;
     MapTokenToString            id_to_word_;
 
-    gspeak::ITextToSpeech       * gtts_;
+    tts_connect::ITextToSpeech  * gtts_;
 
     std::string                 error_msg_;
 };

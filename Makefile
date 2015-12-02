@@ -84,7 +84,7 @@ EXE=
 SRCC = ttscache.cpp wav_proc.cpp ttscache_serial.cpp str_proc.cpp
 OBJS = $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCC))
 
-LIB_NAMES = wave convimp3 lameplus gspeak utils
+LIB_NAMES = wave convimp3 lameplus tts_connect gspeak utils
 LIBS = $(patsubst %,$(BINDIR)/lib%.a,$(LIB_NAMES))
 
 all: static
@@ -137,6 +137,10 @@ $(BINDIR)/libwave.a:
 $(BINDIR)/libgspeak.a:
 	cd ../gspeak; make; cd $(project)
 	ln -sf ../../gspeak/$@ $(BINDIR)
+
+$(BINDIR)/libtts_connect.a:
+	cd ../tts_connect; make; cd $(project)
+	ln -sf ../../tts_connect/$@ $(BINDIR)
 
 $(BINDIR):
 	@ mkdir -p $(OBJDIR)

@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <iostream>         // cout
 
-#include "../gspeak/gspeak.h"   // GSpeak
+#include "../tts_connect/tts_connect.h" // TtsConnect
 #include "ttscache.h"           // TtsCache
 
 #include "../utils/dummy_logger.h"          // dummy_log_set_log_level
@@ -24,11 +24,11 @@ int main()
     config.temp_path        = "voc_temp";
     config.max_length       = 100;
 
-    gspeak::GSpeak tts;
+    tts_connect::ITextToSpeech * tts = tts_connect::TtsConnect::get().get_engine( "gspeak" );
 
     ttscache::TtsCache g;
 
-    bool b = g.init( config, & tts );
+    bool b = g.init( config, tts );
 
     if( b == false )
     {
