@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 2540 $ $Date:: 2015-09-09 #$ $Author: serge $
+// $Revision: 2940 $ $Date:: 2015-12-07 #$ $Author: serge $
 
 #ifndef WAV_PROC_H
 #define WAV_PROC_H
@@ -33,6 +33,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 NAMESPACE_TTSCACHE_START
 
 bool convert_mp3_to_wav( const std::string & inp, const std::string & outp );
+bool convert_wav_to_mp3( const std::string & inp, const std::string & outp );
 bool join_wav_files( const std::vector< std::string > & inp, const std::string & outp );
 
 NAMESPACE_TTSCACHE_END

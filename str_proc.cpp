@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 2563 $ $Date:: 2015-09-13 #$ $Author: serge $
+// $Revision: 2946 $ $Date:: 2015-12-07 #$ $Author: serge $
 
 
 #include "str_proc.h"               // self
@@ -120,7 +120,7 @@ void remove_special_symbols( std::string & s )
 {
 //    boost::replace_all( s, "~@#$%^&*()__+`-=[]{}\\:|<>/", " " );
     std::replace_if( s.begin(), s.end(),
-                [] (const char& c) { return std::ispunct(c); }, ' ' );
+                [] (const char& c) { return std::ispunct(c) && c != '<' && c != '>'; }, ' ' );
 }
 
 void split_into_sentences( std::vector<std::string> & res, const std::string & str )

@@ -1,4 +1,3 @@
-#include <cstdio>
 #include <iostream>         // cout
 
 #include "../tts_connect/tts_connect.h" // TtsConnect
@@ -8,8 +7,6 @@
 
 int main()
 {
-    printf( "Hello, world\n" );
-
     dummy_logger::set_log_level( log_levels_log4j::DEBUG );
 
     std::string input;
@@ -24,7 +21,9 @@ int main()
     config.temp_path        = "voc_temp";
     config.max_length       = 100;
 
-    tts_connect::ITextToSpeech * tts = tts_connect::TtsConnect::get().get_engine( "gspeak" );
+    tts_connect::ITextToSpeech * tts = tts_connect::TtsConnect::get().get_engine( "espeak" );
+
+    tts->set_param( "gap_between_words", 0 );
 
     ttscache::TtsCache g;
 
@@ -34,7 +33,7 @@ int main()
     {
         std::cout << "ERROR: cannot initialize TtsCache" << std::endl;
 
-        return 0;
+        return 1;
     }
 
     g.say( input, "text.wav" );

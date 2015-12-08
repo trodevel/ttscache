@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 2540 $ $Date:: 2015-09-09 #$ $Author: serge $
+// $Revision: 2940 $ $Date:: 2015-12-07 #$ $Author: serge $
 
 
 #include "wav_proc.h"               // self
@@ -41,6 +41,29 @@ bool convert_mp3_to_wav( const std::string & inp, const std::string & outp )
     try
     {
         bool b = convimp3::Codec::decode( inp.c_str(), outp.c_str() );
+
+        if( b == false )
+        {
+            dummy_log_error( MODULENAME, "cannot convert %s into %s", inp.c_str(), outp.c_str() );
+
+            return false;
+        }
+    }
+    catch( std::exception & e )
+    {
+        dummy_log_error( MODULENAME, "exception: cannot convert %s into %s, %s", inp.c_str(), outp.c_str(), e.what() );
+
+        return false;
+    }
+
+    return true;
+}
+
+bool convert_wav_to_mp3( const std::string & inp, const std::string & outp )
+{
+    try
+    {
+        bool b = convimp3::Codec::encode( inp.c_str(), outp.c_str() );
 
         if( b == false )
         {

@@ -26,7 +26,7 @@ BOOST_LIB_NAMES := boost_system boost_filesystem boost_locale
 BOOST_LIBS = $(patsubst %,$(BOOST_LIB_PATH)/lib%.a,$(BOOST_LIB_NAMES))
 
 
-EXT_LIBS=-lcurl -lmp3lame $(BOOST_LIBS)
+EXT_LIBS=-lcurl -lportaudio -lespeak -lmp3lame $(BOOST_LIBS)
 
 ###################################################################
 
@@ -84,7 +84,7 @@ EXE=
 SRCC = ttscache.cpp wav_proc.cpp ttscache_serial.cpp str_proc.cpp
 OBJS = $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCC))
 
-LIB_NAMES = wave convimp3 lameplus tts_connect gspeak utils
+LIB_NAMES = wave convimp3 lameplus tts_connect espeak_cpp wave gspeak svox festvox utils lang_tools
 LIBS = $(patsubst %,$(BINDIR)/lib%.a,$(LIB_NAMES))
 
 all: static
@@ -141,6 +141,22 @@ $(BINDIR)/libgspeak.a:
 $(BINDIR)/libtts_connect.a:
 	cd ../tts_connect; make; cd $(project)
 	ln -sf ../../tts_connect/$@ $(BINDIR)
+
+$(BINDIR)/liblang_tools.a:
+	cd ../lang_tools; make; cd $(project)
+	ln -sf ../../lang_tools/$@ $(BINDIR)
+
+$(BINDIR)/libespeak_cpp.a:
+	cd ../espeak_cpp; make; cd $(project)
+	ln -sf ../../espeak_cpp/$@ $(BINDIR)
+
+$(BINDIR)/libsvox.a:
+	cd ../svox; make; cd $(project)
+	ln -sf ../../svox/$@ $(BINDIR)
+
+$(BINDIR)/libfestvox.a:
+	cd ../festvox; make; cd $(project)
+	ln -sf ../../festvox/$@ $(BINDIR)
 
 $(BINDIR):
 	@ mkdir -p $(OBJDIR)

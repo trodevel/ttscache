@@ -1,6 +1,6 @@
 /*
 
-Cache over Gtts.
+Cache over TTS engines.
 
 Copyright (C) 2014 Sergey Kolevatov
 
@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 2880 $ $Date:: 2015-12-02 #$ $Author: serge $
+// $Revision: 2947 $ $Date:: 2015-12-07 #$ $Author: serge $
 
 #ifndef TTSCACHE_H
 #define TTSCACHE_H
@@ -116,6 +116,7 @@ private:
     bool save_state__();
 
     bool load_state__();
+    bool load_state_v2__( std::ifstream & is, uint32_t line_num );
 
     bool parse_line_and_insert__( const std::string & s, uint32_t line_num );
 
@@ -131,7 +132,7 @@ private:
 
     static void localize( WordLocale & w );
 
-    static std::string get_locale_name( lang_tools::lang_e lang );
+    static const std::string & get_locale_name( lang_tools::lang_e lang );
 
     bool add_new_word( const WordLocale & w, uint32_t id );
 
@@ -140,7 +141,7 @@ private:
     std::string get_filename_wav( const Token & t ) const;
     std::string get_filename_mp3( const Token & t ) const;
 
-    bool say_word( const Token & t, const std::string & mp3_file, std::string & error );
+    bool say_word( const Token & t, const std::string & wav_file, std::string & error );
 
     static lang_tools::lang_e   check_lang( const std::string & s );
 
@@ -157,7 +158,7 @@ private:
     MapWordLocaleToInt          word_to_id_;
     MapTokenToString            id_to_word_;
 
-    tts_connect::ITextToSpeech  * gtts_;
+    tts_connect::ITextToSpeech  * tts_;
 
     std::string                 error_msg_;
 };

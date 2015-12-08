@@ -1,6 +1,6 @@
 /*
 
-Cache over Gtts. Serialization.
+Cache over TTS engines. Serialization.
 
 Copyright (C) 2014 Sergey Kolevatov
 
@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 2545 $ $Date:: 2015-09-09 #$ $Author: serge $
+// $Revision: 2947 $ $Date:: 2015-12-07 #$ $Author: serge $
 
 
 #include "ttscache.h"               // self
@@ -28,6 +28,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <fstream>                  // std::ofstream
 #include <limits>                   // std::numeric_limits
 
+#include "../lang_tools/parser.h"       // to_lang()
+#include "../lang_tools/str_helper.h"   // to_string()
 #include "../utils/dummy_logger.h"      // dummy_log
 #include "../utils/trim.h"              // trim
 
@@ -37,7 +39,7 @@ NAMESPACE_TTSCACHE_START
 
 std::ofstream & operator <<( std::ofstream & os, const TtsCache::Token & t )
 {
-    os << t.id << " " << static_cast<unsigned int>( t.lang );
+    os << t.id << " " << lang_tools::to_string( t.lang );
 
     return os;
 }
@@ -53,6 +55,8 @@ bool TtsCache::save_state__()
 {
     std::ofstream ofs( config_.word_base_path );
 
+    ofs << "VER_2_0" << "\n";
+
     for( const auto & e : id_to_word_ )
     {
         ofs << e;
@@ -63,23 +67,13 @@ bool TtsCache::save_state__()
     return true;
 }
 
-bool TtsCache::load_state__()
+bool TtsCache::load_state_v2__( std::ifstream & is, uint32_t line_num )
 {
-    std::ifstream in_file( config_.word_base_path.c_str() );
     std::string line;
 
-    if( in_file.is_open() == false )
+    while( is.good() )
     {
-        dummy_log_error( MODULENAME, "cannot open file %s", config_.word_base_path.c_str() );
-
-        return false;
-    }
-
-    uint32_t line_num = 0;
-
-    while( in_file.good() )
-    {
-        std::getline( in_file, line );
+        std::getline( is, line );
 
         line_num++;
 
@@ -89,9 +83,47 @@ bool TtsCache::load_state__()
             dummy_log_warn( MODULENAME, "cannot parse record '%s' at line %u", line.c_str(), line_num );
     }
 
-    in_file.close();
-
     dummy_log_debug( MODULENAME, "loaded words = %u", id_to_word_.size() );
+
+    return true;
+}
+
+bool TtsCache::load_state__()
+{
+    std::ifstream in_file( config_.word_base_path.c_str() );
+
+    if( in_file.is_open() == false )
+    {
+        dummy_log_error( MODULENAME, "cannot open file %s", config_.word_base_path.c_str() );
+
+        return false;
+    }
+
+    if( in_file.good() )
+    {
+        std::string line;
+
+        std::getline( in_file, line );
+
+        if( line == "VER_2_0" )
+        {
+            load_state_v2__( in_file, 1 );
+        }
+        else
+        {
+            dummy_log_error( MODULENAME, "unsupported version %s", line.c_str() );
+
+            return false;
+        }
+    }
+    else
+    {
+        dummy_log_error( MODULENAME, "cannot read from file %s", config_.word_base_path.c_str() );
+
+        return false;
+    }
+
+    in_file.close();
 
     return true;
 }
@@ -110,10 +142,10 @@ bool TtsCache::parse_line_and_insert__( const std::string & si, uint32_t line_nu
     WordLocale w;
     uint32_t id;
 
-    uint32_t lang_int;
+    std::string lang_str;
 
     iss >> id;
-    iss >> lang_int;
+    iss >> lang_str;
     std::getline( iss, w.word );
 
     trim( w.word );
@@ -121,7 +153,7 @@ bool TtsCache::parse_line_and_insert__( const std::string & si, uint32_t line_nu
     if( w.word.empty() )
         return false;
 
-    w.lang  = static_cast< lang_tools::lang_e >( lang_int );
+    w.lang  = lang_tools::to_lang( lang_str );
 
     return add_new_word( w, id );
 }
