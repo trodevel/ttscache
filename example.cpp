@@ -7,7 +7,7 @@
 
 int main()
 {
-    dummy_logger::set_log_level( log_levels_log4j::DEBUG );
+    dummy_logger::set_log_level( log_levels_log4j::Debug );
 
     std::string input;
 
